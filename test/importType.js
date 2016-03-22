@@ -1,0 +1,30 @@
+import test from 'ava';
+import {importType} from '../utils';
+
+test('should return "builtin" for node.js modules', t => {
+  t.is(importType('fs'), 'builtin');
+  t.is(importType('path'), 'builtin');
+});
+
+test('should return "external" for non-builtin modules without a relative path', t => {
+  t.is(importType('lodash'), 'external');
+  t.is(importType('async'), 'external');
+  t.is(importType('chalk'), 'external');
+  t.is(importType('foo'), 'external');
+  t.is(importType('lodash.find'), 'external');
+});
+
+test('should return "parent" for internal modules that go through the parent', t => {
+  t.is(importType('../foo'), 'relative-parent');
+  t.is(importType('../../foo'), 'relative-parent');
+  t.is(importType('../bar/foo'), 'relative-parent');
+});
+
+test('should return "sibling" for internal modules that are connected to one of the siblings', t => {
+  t.is(importType('./foo'), 'relative-sibling');
+  t.is(importType('./foo/bar'), 'relative-sibling');
+});
+
+test('should return "index" for pointing to sibling index file', t => {
+  t.is(importType('./'), 'index');
+});
