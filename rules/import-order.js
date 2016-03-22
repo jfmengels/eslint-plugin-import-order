@@ -3,11 +3,10 @@
 var find = require('lodash.find');
 var utils = require('../utils');
 
-var defaultOrder = ['builtin', 'external', 'parent', 'index', 'sibling'];
+var defaultOrder = ['builtin', 'external', 'parent', 'sibling', 'index'];
 
 function isStaticRequire(node) {
   return node &&
-    node.type === 'CallExpression' &&
     node.callee.type === 'Identifier' &&
     node.callee.name === 'require' &&
     node.arguments.length === 1 &&
@@ -33,29 +32,52 @@ function treatNode(context, node, name, order, imported) {
   imported.push({name: name, rank: rank});
 }
 
-// Ignore dynamic requires
-// Ignore not top-level requires
-// Handle options
-
 /* eslint quote-props: [2, "as-needed"] */
 module.exports = function importOrderRule(context) {
   var imported = [];
   var order = context.options[0] || defaultOrder;
+  var level = 0;
+
+  function incrementLevel() {
+    level++;
+  }
+  function decrementLevel() {
+    level--;
+  }
 
   return {
     ImportDeclaration: function handleImports(node) {
       var name = node.source.value;
       treatNode(context, node, name, order, imported);
     },
-    VariableDeclarator: function handleRequires(node) {
-      if (!isStaticRequire(node.init)) {
+    CallExpression: function handleRequires(node) {
+      if (level !== 0 || !isStaticRequire(node)) {
         return;
       }
-      var name = node.init.arguments[0].value;
+      var name = node.arguments[0].value;
       treatNode(context, node, name, order, imported);
     },
+    FunctionDeclaration: incrementLevel,
+    FunctionExpression: incrementLevel,
+    ArrowFunctionExpression: incrementLevel,
+    BlockStatement: incrementLevel,
+    'FunctionDeclaration:exit': decrementLevel,
+    'FunctionExpression:exit': decrementLevel,
+    'ArrowFunctionExpression:exit': decrementLevel,
+    'BlockStatement.exit': decrementLevel,
     'Program.exit': function reset() {
       imported = [];
     }
   };
 };
+
+module.exports.schema = [
+  {
+    type: 'array',
+    uniqueItems: true,
+    length: 5,
+    items: {
+      enum: defaultOrder
+    }
+  }
+];
