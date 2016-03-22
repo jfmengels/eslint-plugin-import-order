@@ -32,9 +32,9 @@ function isRelativeToSibling(name) {
 var importType = cond([
   [isBuiltIn, constant('builtin')],
   [isExternalModule, constant('external')],
-  [isRelativeToParent, constant('relative-parent')],
+  [isRelativeToParent, constant('parent')],
   [isIndex, constant('index')],
-  [isRelativeToSibling, constant('relative-sibling')]
+  [isRelativeToSibling, constant('sibling')]
 ]);
 
 module.exports = {

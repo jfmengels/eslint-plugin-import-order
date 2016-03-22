@@ -56,6 +56,7 @@
   },
   "dependencies": {
     "builtin-modules": "^1.1.1",
-    "lodash.cond": "^4.2.0"
+    "lodash.cond": "^4.2.0",
+    "lodash.find": "^4.2.0"
   }
 }

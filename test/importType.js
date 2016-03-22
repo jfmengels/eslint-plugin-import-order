@@ -14,15 +14,15 @@ test('should return "external" for non-builtin modules without a relative path',
   t.is(importType('lodash.find'), 'external');
 });
 
-test('should return "parent" for internal modules that go through the parent', t => {
-  t.is(importType('../foo'), 'relative-parent');
-  t.is(importType('../../foo'), 'relative-parent');
-  t.is(importType('../bar/foo'), 'relative-parent');
+test('should return parent for internal modules that go through the parent', t => {
+  t.is(importType('../foo'), 'parent');
+  t.is(importType('../../foo'), 'parent');
+  t.is(importType('../bar/foo'), 'parent');
 });
 
-test('should return "sibling" for internal modules that are connected to one of the siblings', t => {
-  t.is(importType('./foo'), 'relative-sibling');
-  t.is(importType('./foo/bar'), 'relative-sibling');
+test('should return sibling for internal modules that are connected to one of the siblings', t => {
+  t.is(importType('./foo'), 'sibling');
+  t.is(importType('./foo/bar'), 'sibling');
 });
 
 test('should return "index" for pointing to sibling index file', t => {
