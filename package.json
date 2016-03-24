@@ -17,13 +17,11 @@
     "eslint",
     "eslintplugin",
     "eslint-plugin",
-    "ava",
-    "test",
-    "runner",
-    "assert",
-    "asserts",
-    "assertion",
-    "mocha"
+    "import",
+    "require",
+    "order",
+    "style",
+    "convention"
   ],
   "author": {
     "name": "Jeroen Engels",
