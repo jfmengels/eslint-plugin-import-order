@@ -22,7 +22,7 @@ function reportIfPresentAfterLowerRank(context, node, name, rank, imported) {
     return importedItem.rank > rank;
   });
   if (found) {
-    context.report(node, name + ' import should occur before import of ' + found.name);
+    context.report(node, '`' + name + '` import should occur before import of `' + found.name + '`');
   }
 }
 

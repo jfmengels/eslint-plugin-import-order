@@ -110,7 +110,7 @@ test(() => {
         var fs = require('fs');
         `,
         errors: [
-          {...ruleError, message: 'fs import should occur before import of async'}
+          {...ruleError, message: '`fs` import should occur before import of `async`'}
         ]
       },
       {
@@ -120,7 +120,7 @@ test(() => {
         import fs from 'fs';
         `,
         errors: [
-          {...ruleError, message: 'fs import should occur before import of async'}
+          {...ruleError, message: '`fs` import should occur before import of `async`'}
         ]
       },
       {
@@ -130,7 +130,7 @@ test(() => {
         import fs from 'fs';
         `,
         errors: [
-          {...ruleError, message: 'fs import should occur before import of async'}
+          {...ruleError, message: '`fs` import should occur before import of `async`'}
         ]
       },
       {
@@ -140,7 +140,7 @@ test(() => {
         var async = require('async');
         `,
         errors: [
-          {...ruleError, message: 'async import should occur before import of ../parent'}
+          {...ruleError, message: '`async` import should occur before import of `../parent`'}
         ]
       },
       {
@@ -150,7 +150,7 @@ test(() => {
         var parent = require('../parent');
         `,
         errors: [
-          {...ruleError, message: '../parent import should occur before import of ./sibling'}
+          {...ruleError, message: '`../parent` import should occur before import of `./sibling`'}
         ]
       },
       {
@@ -160,7 +160,7 @@ test(() => {
         var sibling = require('./sibling');
         `,
         errors: [
-          {...ruleError, message: './sibling import should occur before import of ./'}
+          {...ruleError, message: '`./sibling` import should occur before import of `./`'}
         ]
       },
       // Multiple errors
@@ -171,8 +171,8 @@ test(() => {
         var fs = require('fs');
         `,
         errors: [
-          {...ruleError, message: 'async import should occur before import of ./sibling'},
-          {...ruleError, message: 'fs import should occur before import of ./sibling'}
+          {...ruleError, message: '`async` import should occur before import of `./sibling`'},
+          {...ruleError, message: '`fs` import should occur before import of `./sibling`'}
         ]
       },
       // Overriding order to be the reverse of the default order
@@ -183,7 +183,7 @@ test(() => {
         `,
         options: [['index', 'sibling', 'parent', 'external', 'builtin']],
         errors: [
-          {...ruleError, message: './ import should occur before import of fs'}
+          {...ruleError, message: '`./` import should occur before import of `fs`'}
         ]
       },
       // Requiring witout assigning
@@ -194,7 +194,7 @@ test(() => {
         require('fs');
         `,
         errors: [
-          {...ruleError, message: 'fs import should occur before import of async'}
+          {...ruleError, message: '`fs` import should occur before import of `async`'}
         ]
       }
     ]
