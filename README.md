@@ -40,7 +40,7 @@ Configure it in `package.json`.
 
 ## Rules
 
-- [import-order](docs/rules/import-order.md) - Enforce a convention in module import order.
+- [import-order](doc/rules/import-order.md) - Enforce a convention in module import order.
 
 ## Recommended configuration
 
