@@ -19,12 +19,12 @@ var main = require('./');           // 5. "index" of the current directory
 
 ```js
 var _ = require('lodash');
-var path = require('path'); // path import should occur before import of lodash
+var path = require('path'); // `path` import should occur before import of `lodash`
 
 // -----
 
 import _ from 'lodash';
-import path from 'path'; // path import should occur before import of lodash
+import path from 'path'; // `path` import should occur before import of `lodash`
 ```
 
 
@@ -42,10 +42,12 @@ import _ from 'lodash';
 
 ## Options
 
-The rule takes one option, an array describing the order to respect. It needs to contain only and all of the following elements, `"builtin", "external", "parent", "sibling", "index"`, which is the default value.
+This rule supports the following options:
 
-You can set the option in configuration like this:
+`order`: The order to respect. It needs to contain only and all of the following elements: `"builtin", "external", "parent", "sibling", "index"`, which is the default value.
+
+You can set the options like this:
 
 ```js
-"import-order/import-order": [2, ["index", "sibling", "parent", "external", "builtin"]]
+"import-order/import-order": [2, {"order": ["index", "sibling", "parent", "external", "builtin"]}]
 ```

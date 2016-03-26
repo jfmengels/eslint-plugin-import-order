@@ -37,7 +37,8 @@ function treatNode(context, node, name, order, imported) {
 /* eslint quote-props: [2, "as-needed"] */
 module.exports = function importOrderRule(context) {
   var imported = [];
-  var order = context.options[0] || defaultOrder;
+  var options = context.options[0] || {};
+  var order = options.order || defaultOrder;
   var level = 0;
 
   function incrementLevel() {
@@ -75,11 +76,17 @@ module.exports = function importOrderRule(context) {
 
 module.exports.schema = [
   {
-    type: 'array',
-    uniqueItems: true,
-    length: 5,
-    items: {
-      enum: defaultOrder
-    }
+    type: 'object',
+    properties: {
+      order: {
+        type: 'array',
+        uniqueItems: true,
+        length: 5,
+        items: {
+          enum: defaultOrder
+        }
+      }
+    },
+    additionalProperties: false
   }
 ];

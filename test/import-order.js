@@ -65,7 +65,7 @@ test(() => {
           var async = require('async');
           var fs = require('fs');
         `,
-        options: [['index', 'sibling', 'parent', 'external', 'builtin']]
+        options: [{order: ['index', 'sibling', 'parent', 'external', 'builtin']}]
       },
       // Requiring witout assigning
       `
@@ -199,7 +199,7 @@ test(() => {
           var fs = require('fs');
           var index = require('./');
         `,
-        options: [['index', 'sibling', 'parent', 'external', 'builtin']],
+        options: [{order: ['index', 'sibling', 'parent', 'external', 'builtin']}],
         errors: [
           {...ruleError, message: '`./` import should occur before import of `fs`'}
         ]
