@@ -28,8 +28,10 @@ function reportIfPresentAfterLowerRank(context, node, name, rank, imported) {
 
 function treatNode(context, node, name, order, imported) {
   var rank = computeRank(order, name);
-  reportIfPresentAfterLowerRank(context, node, name, rank, imported);
-  imported.push({name: name, rank: rank});
+  if (rank !== -1) {
+    reportIfPresentAfterLowerRank(context, node, name, rank, imported);
+    imported.push({name: name, rank: rank});
+  }
 }
 
 /* eslint quote-props: [2, "as-needed"] */

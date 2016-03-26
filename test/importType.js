@@ -31,3 +31,8 @@ test('should return "index" for sibling index file', t => {
   t.is(importType('./index'), 'index');
   t.is(importType('./index.js'), 'index');
 });
+
+test('should return "unknown" for any unhandled cases', t => {
+  t.is(importType('/malformed'), 'unknown');
+  t.is(importType('   foo'), 'unknown');
+});

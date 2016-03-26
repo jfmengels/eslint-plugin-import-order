@@ -100,11 +100,29 @@ test(() => {
       if (a) {
         require('fs');
       }
+      `,
+      // Ignore unknown/invalid cases
+      `
+      require('/unknown1');
+      require('fs');
+      require('/unknown2');
+      require('async');
+      require('/unknown3');
+      require('../foo');
+      require('/unknown4');
+      require('../foo/bar');
+      require('/unknown5');
+      require('../');
+      require('/unknown6');
+      require('./foo');
+      require('/unknown7');
+      require('./');
+      require('/unknown8');
       `
     ],
     invalid: [
+      // builtin before external module (require)
       {
-        name: 'builtin before external module (require)',
         code: `
         var async = require('async');
         var fs = require('fs');
@@ -113,8 +131,8 @@ test(() => {
           {...ruleError, message: '`fs` import should occur before import of `async`'}
         ]
       },
+      // builtin before external module (import)
       {
-        name: 'builtin before external module (import)',
         code: `
         import async from 'async';
         import fs from 'fs';
@@ -123,8 +141,8 @@ test(() => {
           {...ruleError, message: '`fs` import should occur before import of `async`'}
         ]
       },
+      // builtin before external module (mixed import and require)
       {
-        name: 'builtin before external module (mixed)',
         code: `
         var async = require('async');
         import fs from 'fs';
@@ -133,8 +151,8 @@ test(() => {
           {...ruleError, message: '`fs` import should occur before import of `async`'}
         ]
       },
+      // external before parent
       {
-        name: 'external before parent',
         code: `
         var parent = require('../parent');
         var async = require('async');
@@ -143,8 +161,8 @@ test(() => {
           {...ruleError, message: '`async` import should occur before import of `../parent`'}
         ]
       },
+      // parent before sibling
       {
-        name: 'parent before sibling',
         code: `
         var sibling = require('./sibling');
         var parent = require('../parent');
@@ -153,8 +171,8 @@ test(() => {
           {...ruleError, message: '`../parent` import should occur before import of `./sibling`'}
         ]
       },
+      // sibling before index
       {
-        name: 'index before sibling',
         code: `
         var index = require('./');
         var sibling = require('./sibling');
@@ -186,9 +204,8 @@ test(() => {
           {...ruleError, message: '`./` import should occur before import of `fs`'}
         ]
       },
-      // Requiring witout assigning
+      // Requiring without assigning
       {
-        name: 'builtin before external module (require)',
         code: `
         require('async');
         require('fs');

@@ -13,8 +13,9 @@ function isBuiltIn(name) {
   return builtinModules.indexOf(name) !== -1;
 }
 
+var externalModuleRegExp = /^\w/;
 function isExternalModule(name) {
-  return name[0] !== '.';
+  return externalModuleRegExp.test(name);
 }
 
 function isRelativeToParent(name) {
@@ -37,7 +38,8 @@ var importType = cond([
   [isExternalModule, constant('external')],
   [isRelativeToParent, constant('parent')],
   [isIndex, constant('index')],
-  [isRelativeToSibling, constant('sibling')]
+  [isRelativeToSibling, constant('sibling')],
+  [constant(true), constant('unknown')]
 ]);
 
 module.exports = {
