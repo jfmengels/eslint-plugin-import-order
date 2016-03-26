@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+- stable
+- '0.10'
+deploy:
+  provider: npm
+  email: jfm.engels@gmail.com
+  api_key:
+    secure: IrpRRuP8LuJ5Y7rq5Mgxb0aC644y/v4UUy6e6tMzjbEGysW9DAMyP7jAGHZvgJg4C6sh5CzvZNAAcRKauvYxR9a29wO2UkVfnFNoIRpTZQ2kBZhaToxS7Q+TEiXqVgUN4hpCdJ9S0vLr4HL9ob3+FgxIJ+cV+sMTf6uVjvjs4AOwlNkupYyad0M9jX2NL+UnLzYwDWBCdHaR37Sn5LKkHKb/hq0hOiDzO0i3wbnHsxkWabNi/8/7/p7WJI64s5LdnftEXZraxxxXc8Se+vLHZIZazrcaWOFcLQW+4ZN/8OHYA1BEcmxjjxP9uEfmRYK4V3hTJKumyrnBAnWlCeFChG57HRP3Fpv38faMjxBVEBk0jVWBcK1njM0rk3sayINZOsT1yCMrsIpW5BxwaDMR+PVqJRhdtrmfggzMLiF6BaECjCri2bJKsrHciMADBKNM6geXuDBCXYJ9ZVTrJIo/AVicNub9rH6A4zWCDlZlOryJUfbIvAkV9zTApTFsTNpnGxDi8dgbEYV+wKiwmW/SJWwy3AljWSWYnOzayVI0jUM0bmj1rG9JeWnr4VcjnrV6S09c9r6NbLzvm/7tGMbaTXZwdOPWfpavUaKsuhPKXBwL2vPcAuYeslXRU3CV/Jmtq4A9T/iy6fq/6JjJoA7XQcpBM////CMKOYgiCwmAnQc=
+  on:
+    tags: true
+    all_branches: true
+    node: stable
+    repo: jfmengels/eslint-plugin-import-order
