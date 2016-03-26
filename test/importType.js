@@ -25,6 +25,9 @@ test('should return sibling for internal modules that are connected to one of th
   t.is(importType('./foo/bar'), 'sibling');
 });
 
-test('should return "index" for pointing to sibling index file', t => {
+test('should return "index" for sibling index file', t => {
+  t.is(importType('.'), 'index');
   t.is(importType('./'), 'index');
+  t.is(importType('./index'), 'index');
+  t.is(importType('./index.js'), 'index');
 });

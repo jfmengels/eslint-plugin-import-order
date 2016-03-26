@@ -22,7 +22,10 @@ function isRelativeToParent(name) {
 }
 
 function isIndex(name) {
-  return name === './';
+  return name === '.' ||
+    name === './' ||
+    name === './index' ||
+    name === './index.js';
 }
 
 function isRelativeToSibling(name) {
