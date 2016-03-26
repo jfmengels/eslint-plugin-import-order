@@ -3,15 +3,20 @@
 Enforce a convention in the order of `require()` / `import` statements. The order is as shown in the following example:
 
 ```js
-var fs = require('fs');             // 1. node "builtins"
+// 1. node "builtins"
+var fs = require('fs');
 var path = require('path');
-var _ = require('lodash');          // 2. "external" modules
+// 2. "external" modules
+var _ = require('lodash');
 var chalk = require('chalk');
-var foo = require('../foo');        // 3. modules from a "parent" directory
+// 3. modules from a "parent" directory
+var foo = require('../foo');
 var qux = require('../../foo/qux');
-var bar = require('./bar');         // 4. "sibling" modules from the same directory
-var baz = require('./bar/baz');     //    or modules from a sibling's directory
-var main = require('./');           // 5. "index" of the current directory
+// 4. "sibling" modules from the same or a sibling's directory
+var bar = require('./bar');
+var baz = require('./bar/baz');
+// 5. "index" of the current directory
+var main = require('./');
 ```
 
 
