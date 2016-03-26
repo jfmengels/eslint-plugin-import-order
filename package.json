@@ -2,17 +2,13 @@
   "name": "eslint-plugin-import-order",
   "version": "1.0.1",
   "description": "ESLint plugin to enforce the order of import/require statements.",
-  "main": "index.js",
   "engines": {
     "node": ">=0.10.0"
   },
   "scripts": {
     "test": "xo && ava"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jfmengels/eslint-plugin-import-order.git"
-  },
+  "repository": "jfmengels/eslint-plugin-import-order",
   "keywords": [
     "eslint",
     "eslintplugin",
@@ -28,10 +24,6 @@
     "email": "jfm.engels@gmail.com"
   },
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/jfmengels/eslint-plugin-import-order/issues"
-  },
-  "homepage": "https://github.com/jfmengels/eslint-plugin-import-order#readme",
   "devDependencies": {
     "ava": "^0.13.0",
     "eslint": "^2.4.0",
@@ -40,6 +32,11 @@
   },
   "peerDependencies": {
     "eslint": ">=2"
+  },
+  "dependencies": {
+    "builtin-modules": "^1.1.1",
+    "lodash.cond": "^4.2.0",
+    "lodash.find": "^4.2.0"
   },
   "xo": {
     "space": 2,
@@ -51,10 +48,5 @@
         }
       ]
     }
-  },
-  "dependencies": {
-    "builtin-modules": "^1.1.1",
-    "lodash.cond": "^4.2.0",
-    "lodash.find": "^4.2.0"
   }
 }
