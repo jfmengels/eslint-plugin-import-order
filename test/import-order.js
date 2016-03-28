@@ -120,10 +120,17 @@ test(() => {
       import './foo';
       import 'fs';
       import path from 'path';
+      `,
+      // No imports
+      `
+      function add(a, b) {
+        return a + b;
+      }
+      var foo;
       `
     ],
     invalid: [
-      // builtin before external module (require)
+      // // builtin before external module (require)
       {
         code: `
         var async = require('async');
@@ -193,6 +200,20 @@ test(() => {
         errors: [
           {...ruleError, message: '`async` import should occur before import of `./sibling`'},
           {...ruleError, message: '`fs` import should occur before import of `./sibling`'}
+        ]
+      },
+      // Uses 'after' wording if it creates less errors
+      {
+        code: `
+        var index = require('./');
+        var fs = require('fs');
+        var path = require('path');
+        var _ = require('lodash');
+        var foo = require('foo');
+        var bar = require('bar');
+        `,
+        errors: [
+          {...ruleError, message: '`./` import should occur after import of `bar`'}
         ]
       },
       // Overriding order to be the reverse of the default order

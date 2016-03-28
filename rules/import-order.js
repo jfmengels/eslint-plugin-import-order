@@ -1,9 +1,62 @@
 'use strict';
 
 var find = require('lodash.find');
+var _reverse = require('lodash.reverse');
 var utils = require('../utils');
 
 var defaultOrder = ['builtin', 'external', 'parent', 'sibling', 'index'];
+
+// REPORTING
+
+function reverse(array) {
+  return _reverse(array.map(function (v) {
+    return {
+      name: v.name,
+      rank: -v.rank,
+      node: v.node
+    };
+  }));
+}
+
+function findOutOfOrder(imported) {
+  if (imported.length === 0) {
+    return [];
+  }
+  var maxSeenRankNode = imported[0];
+  return imported.filter(function (importedModule) {
+    var res = importedModule.rank < maxSeenRankNode.rank;
+    if (maxSeenRankNode.rank < importedModule.rank) {
+      maxSeenRankNode = importedModule;
+    }
+    return res;
+  });
+}
+
+function report(context, imported, outOfOrder, order) {
+  outOfOrder.forEach(function (imp) {
+    var found = find(imported, function hasHigherRank(importedItem) {
+      return importedItem.rank > imp.rank;
+    });
+    context.report(imp.node, '`' + imp.name + '` import should occur ' + order + ' import of `' + found.name + '`');
+  });
+}
+
+function makeReport(context, imported) {
+  var outOfOrder = findOutOfOrder(imported);
+  if (!outOfOrder.length) {
+    return;
+  }
+  // There are things to report. Try to minimize the number of reported errors.
+  var reversedImported = reverse(imported);
+  var reversedOrder = findOutOfOrder(reversedImported);
+  if (reversedOrder.length < outOfOrder.length) {
+    report(context, reversedImported, reversedOrder, 'after');
+    return;
+  }
+  report(context, imported, outOfOrder, 'before');
+}
+
+// DETECTING
 
 function isStaticRequire(node) {
   return node &&
@@ -17,20 +70,10 @@ function computeRank(order, name) {
   return order.indexOf(utils.importType(name));
 }
 
-function reportIfPresentAfterLowerRank(context, node, name, rank, imported) {
-  var found = find(imported, function hasHigherRank(importedItem) {
-    return importedItem.rank > rank;
-  });
-  if (found) {
-    context.report(node, '`' + name + '` import should occur before import of `' + found.name + '`');
-  }
-}
-
-function treatNode(context, node, name, order, imported) {
+function registerNode(node, name, order, imported) {
   var rank = computeRank(order, name);
   if (rank !== -1) {
-    reportIfPresentAfterLowerRank(context, node, name, rank, imported);
-    imported.push({name: name, rank: rank});
+    imported.push({name: name, rank: rank, node: node});
   }
 }
 
@@ -52,7 +95,7 @@ module.exports = function importOrderRule(context) {
     ImportDeclaration: function handleImports(node) {
       if (node.specifiers.length) { // Ignoring unassigned imports
         var name = node.source.value;
-        treatNode(context, node, name, order, imported);
+        registerNode(node, name, order, imported);
       }
     },
     VariableDeclarator: function handleRequires(node) {
@@ -60,7 +103,11 @@ module.exports = function importOrderRule(context) {
         return;
       }
       var name = node.init.arguments[0].value;
-      treatNode(context, node.init, name, order, imported);
+      registerNode(node.init, name, order, imported);
+    },
+    'Program:exit': function reportAndReset() {
+      makeReport(context, imported);
+      imported = [];
     },
     FunctionDeclaration: incrementLevel,
     FunctionExpression: incrementLevel,
@@ -69,10 +116,7 @@ module.exports = function importOrderRule(context) {
     'FunctionDeclaration:exit': decrementLevel,
     'FunctionExpression:exit': decrementLevel,
     'ArrowFunctionExpression:exit': decrementLevel,
-    'BlockStatement.exit': decrementLevel,
-    'Program.exit': function reset() {
-      imported = [];
-    }
+    'BlockStatement:exit': decrementLevel
   };
 };
 
