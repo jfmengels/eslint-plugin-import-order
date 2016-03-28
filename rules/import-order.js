@@ -77,6 +77,11 @@ function registerNode(node, name, order, imported) {
   }
 }
 
+function isInVariableDeclarator(node) {
+  return node &&
+    (node.type === 'VariableDeclarator' || isInVariableDeclarator(node.parent));
+}
+
 /* eslint quote-props: [2, "as-needed"] */
 module.exports = function importOrderRule(context) {
   var imported = [];
@@ -98,12 +103,12 @@ module.exports = function importOrderRule(context) {
         registerNode(node, name, order, imported);
       }
     },
-    VariableDeclarator: function handleRequires(node) {
-      if (level !== 0 || !isStaticRequire(node.init)) {
+    CallExpression: function handleRequires(node) {
+      if (level !== 0 || !isStaticRequire(node) || !isInVariableDeclarator(node.parent)) {
         return;
       }
-      var name = node.init.arguments[0].value;
-      registerNode(node.init, name, order, imported);
+      var name = node.arguments[0].value;
+      registerNode(node, name, order, imported);
     },
     'Program:exit': function reportAndReset() {
       makeReport(context, imported);

@@ -226,6 +226,26 @@ test(() => {
         errors: [
           {...ruleError, message: '`./` import should occur before import of `fs`'}
         ]
+      },
+      // member expression of require
+      {
+        code: `
+        var foo = require('./foo').bar;
+        var fs = require('fs');
+        `,
+        errors: [
+          {...ruleError, message: '`fs` import should occur before import of `./foo`'}
+        ]
+      },
+      // nested member expression of require
+      {
+        code: `
+        var foo = require('./foo').bar.bar.bar;
+        var fs = require('fs');
+        `,
+        errors: [
+          {...ruleError, message: '`fs` import should occur before import of `./foo`'}
+        ]
       }
     ]
   });
