@@ -50,15 +50,17 @@ module.exports = function importOrderRule(context) {
 
   return {
     ImportDeclaration: function handleImports(node) {
-      var name = node.source.value;
-      treatNode(context, node, name, order, imported);
+      if (node.specifiers.length) { // Ignoring unassigned imports
+        var name = node.source.value;
+        treatNode(context, node, name, order, imported);
+      }
     },
-    CallExpression: function handleRequires(node) {
-      if (level !== 0 || !isStaticRequire(node)) {
+    VariableDeclarator: function handleRequires(node) {
+      if (level !== 0 || !isStaticRequire(node.init)) {
         return;
       }
-      var name = node.arguments[0].value;
-      treatNode(context, node, name, order, imported);
+      var name = node.init.arguments[0].value;
+      treatNode(context, node.init, name, order, imported);
     },
     FunctionDeclaration: incrementLevel,
     FunctionExpression: incrementLevel,

@@ -19,6 +19,8 @@ var baz = require('./bar/baz');
 var main = require('./');
 ```
 
+Unassigned imports are not accounted for, as the order they are imported in may be important.
+
 
 ## Fail
 
@@ -43,6 +45,12 @@ var _ = require('lodash');
 
 import path from 'path';
 import _ from 'lodash';
+
+// -----
+
+// Allowed as ̀`babel-register` is not assigned.
+require('babel-register');
+var path = require('path');
 ```
 
 ## Options

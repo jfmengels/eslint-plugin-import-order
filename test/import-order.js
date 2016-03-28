@@ -67,16 +67,6 @@ test(() => {
         `,
         options: [{order: ['index', 'sibling', 'parent', 'external', 'builtin']}]
       },
-      // Requiring witout assigning
-      `
-      require('fs');
-      require('async');
-      require('../foo');
-      require('../foo/bar');
-      require('../');
-      require('./foo');
-      require('./');
-      `,
       // Ignore dynamic requires
       `
       var path = require('path');
@@ -103,21 +93,33 @@ test(() => {
       `,
       // Ignore unknown/invalid cases
       `
-      require('/unknown1');
-      require('fs');
-      require('/unknown2');
-      require('async');
-      require('/unknown3');
-      require('../foo');
-      require('/unknown4');
-      require('../foo/bar');
-      require('/unknown5');
-      require('../');
-      require('/unknown6');
+      var unknown1 = require('/unknown1');
+      var fs = require('fs');
+      var unknown2 = require('/unknown2');
+      var async = require('async');
+      var unknown3 = require('/unknown3');
+      var foo = require('../foo');
+      var unknown4 = require('/unknown4');
+      var bar = require('../foo/bar');
+      var unknown5 = require('/unknown5');
+      var parent = require('../');
+      var unknown6 = require('/unknown6');
+      var foo = require('./foo');
+      var unknown7 = require('/unknown7');
+      var index = require('./');
+      var unknown8 = require('/unknown8');
+      `,
+      // Ignoring unassigned values by default (require)
+      `
       require('./foo');
-      require('/unknown7');
-      require('./');
-      require('/unknown8');
+      require('fs');
+      var path = require('path');
+      `,
+      // Ignoring unassigned values by default (import)
+      `
+      import './foo';
+      import 'fs';
+      import path from 'path';
       `
     ],
     invalid: [
@@ -202,16 +204,6 @@ test(() => {
         options: [{order: ['index', 'sibling', 'parent', 'external', 'builtin']}],
         errors: [
           {...ruleError, message: '`./` import should occur before import of `fs`'}
-        ]
-      },
-      // Requiring without assigning
-      {
-        code: `
-        require('async');
-        require('fs');
-        `,
-        errors: [
-          {...ruleError, message: '`fs` import should occur before import of `async`'}
         ]
       }
     ]
