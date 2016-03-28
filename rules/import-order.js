@@ -1,7 +1,6 @@
 'use strict';
 
 var find = require('lodash.find');
-var _reverse = require('lodash.reverse');
 var utils = require('../utils');
 
 var defaultOrder = ['builtin', 'external', 'parent', 'sibling', 'index'];
@@ -9,13 +8,13 @@ var defaultOrder = ['builtin', 'external', 'parent', 'sibling', 'index'];
 // REPORTING
 
 function reverse(array) {
-  return _reverse(array.map(function (v) {
+  return array.map(function (v) {
     return {
       name: v.name,
       rank: -v.rank,
       node: v.node
     };
-  }));
+  }).reverse();
 }
 
 function findOutOfOrder(imported) {

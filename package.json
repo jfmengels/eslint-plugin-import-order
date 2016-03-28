@@ -8,6 +8,11 @@
   "scripts": {
     "test": "xo && ava"
   },
+  "files": [
+    "index.js",
+    "utils.js",
+    "rules"
+  ],
   "repository": "jfmengels/eslint-plugin-import-order",
   "keywords": [
     "eslint",
@@ -36,8 +41,7 @@
   "dependencies": {
     "builtin-modules": "^1.1.1",
     "lodash.cond": "^4.2.0",
-    "lodash.find": "^4.2.0",
-    "lodash.reverse": "^4.0.1"
+    "lodash.find": "^4.2.0"
   },
   "xo": {
     "space": 2,

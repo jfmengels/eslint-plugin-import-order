@@ -130,7 +130,7 @@ test(() => {
       `
     ],
     invalid: [
-      // // builtin before external module (require)
+      // builtin before external module (require)
       {
         code: `
         var async = require('async');
