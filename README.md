@@ -31,7 +31,7 @@ Configure it in `package.json`.
 			"import-order"
 		],
 		"rules": {
-			"import-order": 2
+			"import-order/import-order": 2
 		}
 	}
 }
