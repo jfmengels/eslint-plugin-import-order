@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-import-order",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "ESLint plugin to enforce the order of import/require statements.",
   "engines": {
     "node": ">=0.10.0"
