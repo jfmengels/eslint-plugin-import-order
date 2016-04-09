@@ -18,13 +18,13 @@ test('should return "external-child" for non-builtin modules with path separator
   t.is(importType('utils/parseColor'), 'external-child');
 });
 
-test('should return parent for internal modules that go through the parent', t => {
+test('should return "parent" for internal modules that go through the parent', t => {
   t.is(importType('../foo'), 'parent');
   t.is(importType('../../foo'), 'parent');
   t.is(importType('../bar/foo'), 'parent');
 });
 
-test('should return sibling for internal modules that are connected to one of the siblings', t => {
+test('should return "sibling" for internal modules that are connected to one of the siblings', t => {
   t.is(importType('./foo'), 'sibling');
   t.is(importType('./foo/bar'), 'sibling');
 });
