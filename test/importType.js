@@ -14,6 +14,10 @@ test('should return "external" for non-builtin modules without a relative path',
   t.is(importType('lodash.find'), 'external');
 });
 
+test('should return "external-child" for non-builtin modules with path separators', t => {
+  t.is(importType('utils/parseColor'), 'external-child');
+});
+
 test('should return parent for internal modules that go through the parent', t => {
   t.is(importType('../foo'), 'parent');
   t.is(importType('../../foo'), 'parent');

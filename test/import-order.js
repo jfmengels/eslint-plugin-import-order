@@ -62,10 +62,11 @@ test(() => {
           var relParent3 = require('../');
           var relParent2 = require('../foo/bar');
           var relParent1 = require('../foo');
+          var parseColor = require('util/parseColor');
           var async = require('async');
           var fs = require('fs');
         `,
-        options: [{order: ['index', 'sibling', 'parent', 'external', 'builtin']}]
+        options: [{order: ['index', 'sibling', 'parent', 'external-child', 'external', 'builtin']}]
       },
       // Ignore dynamic requires
       `

@@ -3,7 +3,7 @@
 var find = require('lodash.find');
 var utils = require('../utils');
 
-var defaultOrder = ['builtin', 'external', 'parent', 'sibling', 'index'];
+var defaultOrder = ['builtin', 'external', 'external-child', 'parent', 'sibling', 'index'];
 
 // REPORTING
 
