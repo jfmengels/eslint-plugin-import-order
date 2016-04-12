@@ -2,7 +2,8 @@
 
 module.exports = {
   rules: {
-    'import-order': require('./rules/import-order')
+    'import-order': require('./rules/import-order'),
+    'no-extraneous-dependencies': require('./rules/no-extraneous-dependencies')
   },
   configs: {
     recommended: {
@@ -14,7 +15,8 @@ module.exports = {
         sourceType: 'module'
       },
       rules: {
-        'import-order/import-order': 2
+        'import-order/import-order': 'error',
+        'import-order/no-extraneous-dependencies': 'error'
       }
     }
   }

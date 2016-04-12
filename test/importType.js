@@ -12,6 +12,7 @@ test('should return "external" for non-builtin modules without a relative path',
   t.is(importType('chalk'), 'external');
   t.is(importType('foo'), 'external');
   t.is(importType('lodash.find'), 'external');
+  t.is(importType('lodash/fp'), 'external');
 });
 
 test('should return parent for internal modules that go through the parent', t => {

@@ -62,5 +62,5 @@ This rule supports the following options:
 You can set the options like this:
 
 ```js
-"import-order/import-order": [2, {"order": ["index", "sibling", "parent", "external", "builtin"]}]
+"import-order/import-order": ["error", {"order": ["index", "sibling", "parent", "external", "builtin"]}]
 ```

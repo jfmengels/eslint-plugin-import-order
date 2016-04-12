@@ -41,7 +41,8 @@
   "dependencies": {
     "builtin-modules": "^1.1.1",
     "lodash.cond": "^4.2.0",
-    "lodash.find": "^4.2.0"
+    "lodash.find": "^4.2.0",
+    "pkg-up": "^1.0.0"
   },
   "xo": {
     "space": 2,

@@ -57,14 +57,6 @@ function makeReport(context, imported) {
 
 // DETECTING
 
-function isStaticRequire(node) {
-  return node &&
-    node.callee.type === 'Identifier' &&
-    node.callee.name === 'require' &&
-    node.arguments.length === 1 &&
-    node.arguments[0].type === 'Literal';
-}
-
 function computeRank(order, name) {
   return order.indexOf(utils.importType(name));
 }
@@ -103,7 +95,7 @@ module.exports = function importOrderRule(context) {
       }
     },
     CallExpression: function handleRequires(node) {
-      if (level !== 0 || !isStaticRequire(node) || !isInVariableDeclarator(node.parent)) {
+      if (level !== 0 || !utils.isStaticRequire(node) || !isInVariableDeclarator(node.parent)) {
         return;
       }
       var name = node.arguments[0].value;

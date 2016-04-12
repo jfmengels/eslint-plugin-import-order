@@ -42,6 +42,15 @@ var importType = cond([
   [constant(true), constant('unknown')]
 ]);
 
+function isStaticRequire(node) {
+  return node &&
+    node.callee.type === 'Identifier' &&
+    node.callee.name === 'require' &&
+    node.arguments.length === 1 &&
+    node.arguments[0].type === 'Literal';
+}
+
 module.exports = {
-  importType: importType
+  importType: importType,
+  isStaticRequire: isStaticRequire
 };
