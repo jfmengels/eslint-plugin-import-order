@@ -67,6 +67,24 @@ test(() => {
         `,
         options: [{order: ['index', 'sibling', 'parent', 'external', 'builtin']}]
       },
+      // Overriding order to include a regular expression
+      {
+        code: `
+          var cond = require('lodash.cond');
+          var findIndex = require('lodash.find');
+          var path = require('path');
+          var $ = require('jquery');
+        `,
+        options: [{order: [/^lodash\./, 'builtin', /^jquery$/]}]
+      },
+      // Alphabetize by import path
+      {
+        code: `
+          var fs = require('fs');
+          var path = require('path');
+        `,
+        options: [{alphabetize: true}]
+      },
       // Ignore dynamic requires
       `
       var path = require('path');
@@ -225,6 +243,29 @@ test(() => {
         options: [{order: ['index', 'sibling', 'parent', 'external', 'builtin']}],
         errors: [
           {...ruleError, message: '`./` import should occur before import of `fs`'}
+        ]
+      },
+      // Overriding order to include a regular expression
+      {
+        code: `
+          var $ = require('jquery');
+          var cond = require('lodash.cond');
+          var findIndex = require('lodash.find');
+        `,
+        options: [{order: [/^lodash\./, /^jquery$/]}],
+        errors: [
+          {...ruleError, message: '`jquery` import should occur after import of `lodash.find`'}
+        ]
+      },
+      // Alphabetize by import path
+      {
+        code: `
+          var path = require('path');
+          var fs = require('fs');
+        `,
+        options: [{alphabetize: true}],
+        errors: [
+          {...ruleError, message: '`fs` import should occur before import of `path`'}
         ]
       },
       // member expression of require
