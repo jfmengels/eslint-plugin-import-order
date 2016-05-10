@@ -62,10 +62,11 @@ test(() => {
           var relParent3 = require('../');
           var relParent2 = require('../foo/bar');
           var relParent1 = require('../foo');
+          var parseColor = require('util/parseColor');
           var async = require('async');
           var fs = require('fs');
         `,
-        options: [{order: ['index', 'sibling', 'parent', 'external', 'builtin']}]
+        options: [{order: ['index', 'sibling', 'parent', 'external-child', 'external', 'builtin']}]
       },
       // Ignore dynamic requires
       `
@@ -222,7 +223,7 @@ test(() => {
           var fs = require('fs');
           var index = require('./');
         `,
-        options: [{order: ['index', 'sibling', 'parent', 'external', 'builtin']}],
+        options: [{order: ['index', 'builtin']}],
         errors: [
           {...ruleError, message: '`./` import should occur before import of `fs`'}
         ]
@@ -246,6 +247,16 @@ test(() => {
         errors: [
           {...ruleError, message: '`fs` import should occur before import of `./foo`'}
         ]
+      },
+      // Overriding order should maintain implicit ordering between external and external-child modules
+      {
+        code: `
+        var fooBar = require('foo/bar');
+        var foo = require('foo');
+        var fs = require('fs');
+        `,
+        options: [{order: ['external', 'builtin']}],
+        errors: [{...ruleError, message: '`foo` import should occur before import of `foo/bar`'}]
       }
     ]
   });

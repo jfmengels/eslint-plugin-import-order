@@ -3,7 +3,7 @@
 var find = require('lodash.find');
 var utils = require('../utils');
 
-var defaultOrder = ['builtin', 'external', 'parent', 'sibling', 'index'];
+var defaultOrder = ['builtin', 'external', 'external-child', 'parent', 'sibling', 'index'];
 
 // REPORTING
 
@@ -85,7 +85,27 @@ function isInVariableDeclarator(node) {
 module.exports = function importOrderRule(context) {
   var imported = [];
   var options = context.options[0] || {};
-  var order = options.order || defaultOrder;
+
+  var order = (options.order || []).slice();
+  for (var i = 0, len = defaultOrder.length; i < len; i++) {
+    var name = defaultOrder[i];
+    var index = order.indexOf(name);
+
+    // If the tier is already present, don't mess with it.
+    if (~index) {
+      continue;
+    }
+
+    // Check if this is a child tier.
+    var parentMatch = name.match(/^([^-]+)-/);
+    // If so, locate its parent tier.
+    var parentIndex = parentMatch ? order.indexOf(parentMatch[1]) : -1;
+    // If the parent tier is found, insert child immediately after parent tier.
+    // Otherwise, insert at list end.
+    var spliceLocation = ~parentIndex ? parentIndex + 1 : order.length;
+    order.splice(spliceLocation, 0, name);
+  }
+
   var level = 0;
 
   function incrementLevel() {

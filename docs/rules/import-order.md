@@ -9,13 +9,15 @@ var path = require('path');
 // 2. "external" modules
 var _ = require('lodash');
 var chalk = require('chalk');
-// 3. modules from a "parent" directory
+// 3. "external-child" modules, references to non-root parts of modules
+var each = require('lodash/collection/each');
+// 4. modules from a "parent" directory
 var foo = require('../foo');
 var qux = require('../../foo/qux');
-// 4. "sibling" modules from the same or a sibling's directory
+// 5. "sibling" modules from the same or a sibling's directory
 var bar = require('./bar');
 var baz = require('./bar/baz');
-// 5. "index" of the current directory
+// 6. "index" of the current directory
 var main = require('./');
 ```
 
@@ -57,10 +59,10 @@ var path = require('path');
 
 This rule supports the following options:
 
-`order`: The order to respect. It needs to contain only and all of the following elements: `"builtin", "external", "parent", "sibling", "index"`, which is the default value.
+`order`: The order to respect. It can contain any and all of the following elements: `"builtin", "external", "external-child", "parent", "sibling", "index"`, which is the default value.
 
 You can set the options like this:
 
 ```js
-"import-order/import-order": [2, {"order": ["index", "sibling", "parent", "external", "builtin"]}]
+"import-order/import-order": [2, {"order": ["index", "sibling", "parent", "external-child", "external", "builtin"]}]
 ```
