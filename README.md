@@ -4,6 +4,10 @@
 
 ESLint plugin to enforce the order of import/require statements.
 
+# Deprecation notice
+
+This plugin is no longer maintained, as its sole feature has been integrated and improved upon in [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import), which does even more cool stuff.
+
 
 ## Install
 
