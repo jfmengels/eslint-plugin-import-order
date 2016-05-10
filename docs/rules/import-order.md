@@ -57,10 +57,18 @@ var path = require('path');
 
 This rule supports the following options:
 
-`order`: The order to respect. It needs to contain only and all of the following elements: `"builtin", "external", "parent", "sibling", "index"`, which is the default value.
+`order`: The order to respect. The default order is `"builtin", "external", "parent", "sibling", "index"`. It may be overriden with an array containing any or all of these values. Any value from the default list not appearing in an explicit ordering are appended to the provided list.
 
 You can set the options like this:
 
 ```js
 "import-order/import-order": [2, {"order": ["index", "sibling", "parent", "external", "builtin"]}]
+```
+
+Additionally, you may supply regular expressions within this list, against which import paths will be tested. Paths not matching any rule are subject to the default sorting rules, and are sorted after the regular expression-based rules.
+
+`alphabetize`: Whether to enforce alphabetization of imports within a single sort group. For example, while all `"builtin"` modules must appear before `"external"` modules, this rule will enforce that all `"builtin"` rules are sorted alphabetically with respect to one another.
+
+```js
+"import-order/import-order": [2, {"alphabetize": true}]
 ```

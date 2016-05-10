@@ -36,7 +36,8 @@ function report(context, imported, outOfOrder, order) {
     var found = find(imported, function hasHigherRank(importedItem) {
       return importedItem.rank > imp.rank;
     });
-    context.report(imp.node, '`' + imp.name + '` import should occur ' + order + ' import of `' + found.name + '`');
+    var message = '`' + imp.name + '` import should occur ' + order + ' import of `' + found.name + '`';
+    context.report(imp.node, message);
   });
 }
 
@@ -55,6 +56,34 @@ function makeReport(context, imported) {
   report(context, imported, outOfOrder, 'before');
 }
 
+// Flatten the array-of-array buckets structure.
+function rankBuckets(buckets, options) {
+  if (options.alphabetize) {
+    buckets.forEach(function (bucket) {
+      bucket.sort(function (a, b) {
+        return a.name < b.name ? -1 : 1;
+      });
+    });
+  }
+
+  // Flatten bucket and append to final order list.
+  buckets.reduce(function (acc, bucket) {
+    if (bucket && bucket.length) {
+      var len = acc.length;
+
+      bucket.forEach(function (data, i) {
+        // Annotate rank.
+        data.rank = len + i;
+      });
+
+      // Append imports.
+      acc = acc.concat(bucket);
+    }
+
+    return acc;
+  }, []);
+}
+
 // DETECTING
 
 function isStaticRequire(node) {
@@ -65,14 +94,25 @@ function isStaticRequire(node) {
     node.arguments[0].type === 'Literal';
 }
 
-function computeRank(order, name) {
-  return order.indexOf(utils.importType(name));
+function computeBucket(order, name) {
+  var regExp = find(order, function (o) {
+    return o.test && o.test(name);
+  });
+
+  // Buckets numbers are cardinal.
+  return order.indexOf(regExp || utils.importType(name));
 }
 
-function registerNode(node, name, order, imported) {
-  var rank = computeRank(order, name);
-  if (rank !== -1) {
-    imported.push({name: name, rank: rank, node: node});
+function registerNode(node, name, order, imported, buckets) {
+  // Each node will fall into a single bucket, and may optionally be sorted
+  // within that bucket.
+  var bucket = computeBucket(order, name);
+
+  if (~bucket) {
+    var data = {name: name, node: node};
+    buckets[bucket] = buckets[bucket] || [];
+    buckets[bucket].push(data);
+    imported.push(data);
   }
 }
 
@@ -81,11 +121,36 @@ function isInVariableDeclarator(node) {
     (node.type === 'VariableDeclarator' || isInVariableDeclarator(node.parent));
 }
 
+function getOrder(options) {
+    // Clone any explicitly-provided order tiers.
+  var order = options.order ? options.order.slice() : [];
+
+  // Loop through the default tiers, checking to see if they already exist
+  // within the explicitly-provided tiers.
+  for (var i = 0, len = defaultOrder.length; i < len; i++) {
+    var name = defaultOrder[i];
+    var index = order.indexOf(name);
+
+    // If the tier is not already present, append it to the list.
+    if (!~index) {
+      order.push(name);
+    }
+  }
+
+  return order;
+}
+
 /* eslint quote-props: [2, "as-needed"] */
 module.exports = function importOrderRule(context) {
-  var imported = [];
   var options = context.options[0] || {};
-  var order = options.order || defaultOrder;
+
+  // buckets are numbered, order is important.
+  var buckets = [];
+  // List of all recognized imports, in order of actual occurrence.
+  var imported = [];
+
+  var order = getOrder(options);
+
   var level = 0;
 
   function incrementLevel() {
@@ -99,7 +164,7 @@ module.exports = function importOrderRule(context) {
     ImportDeclaration: function handleImports(node) {
       if (node.specifiers.length) { // Ignoring unassigned imports
         var name = node.source.value;
-        registerNode(node, name, order, imported);
+        registerNode(node, name, order, imported, buckets);
       }
     },
     CallExpression: function handleRequires(node) {
@@ -107,11 +172,12 @@ module.exports = function importOrderRule(context) {
         return;
       }
       var name = node.arguments[0].value;
-      registerNode(node, name, order, imported);
+      registerNode(node, name, order, imported, buckets);
     },
     'Program:exit': function reportAndReset() {
+      rankBuckets(buckets, options);
       makeReport(context, imported);
-      imported = [];
+      buckets = [];
     },
     FunctionDeclaration: incrementLevel,
     FunctionExpression: incrementLevel,
@@ -129,12 +195,10 @@ module.exports.schema = [
     type: 'object',
     properties: {
       order: {
-        type: 'array',
-        uniqueItems: true,
-        length: 5,
-        items: {
-          enum: defaultOrder
-        }
+        type: 'array'
+      },
+      alphabetize: {
+        type: 'boolean'
       }
     },
     additionalProperties: false
