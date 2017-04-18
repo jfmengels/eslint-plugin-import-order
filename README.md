@@ -35,7 +35,8 @@ Configure it in `package.json`.
 			"import-order"
 		],
 		"rules": {
-			"import-order/import-order": 2
+			"import-order/import-order": "error",
+			"import-order/no-extraneous-dependencies": "error"
 		}
 	}
 }
@@ -45,6 +46,7 @@ Configure it in `package.json`.
 ## Rules
 
 - [import-order](docs/rules/import-order.md) - Enforce a convention in module import order.
+- [no-extraneous-dependencies](docs/rules/no-extraneous-dependencies.md) - Forbid the use of extraneous packages.
 
 ## Recommended configuration
 
